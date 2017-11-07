@@ -1,19 +1,19 @@
 # Unity temp files
 
-*.meta
+#*.meta
 
 # Unity directories
 
-Re-boot/Library/
-Re-boot/ProjectSettings/
-Re-boot/Temp/
-Re-boot/UnityPackageManager/
+#Re-boot/Library/
+#Re-boot/ProjectSettings/
+#Re-boot/Temp/
+#Re-boot/UnityPackageManager/
 
 # Projects files
 
 .vs/
 .idea/
-*.csproj 
+#*.csproj 
 
 # Misc
-Re-boot/Assembly-CSharp.csproj
+#Re-boot/Assembly-CSharp.csproj
