@@ -14,25 +14,17 @@ public class Health : NetworkBehaviour
 	public int currentHealth = maxHealth;
 
 	public RectTransform healthBar;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	public void TakeDamage(int amount)
 	{
 		if (!isServer)
 			return;
+
 		currentHealth -= amount;
 		if (currentHealth <= 0)
 		{
-			currentHealth = 0;
-			Debug.Log("Dead !");
+		    currentHealth = maxHealth;
+			RpcRespawn();
 		}
 		
 	}
@@ -41,4 +33,13 @@ public class Health : NetworkBehaviour
 	{
 		healthBar.sizeDelta = new Vector2(currentHealth, healthBar.sizeDelta.y);		
 	}
+
+    [ClientRpc]
+    void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            transform.position = Vector3.zero;
+        }
+    }
 }
