@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 81298635150335948}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -431,6 +431,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1184567437219690, guid: 242c843d241e944e3a8582fc397b7004,
     type: 2}
   bulletSpawn: {fileID: 4074340335530976}
+  totalRegisteredMovements: 0
 --- !u!114 &114219256944276406
 MonoBehaviour:
   m_ObjectHideFlags: 1
