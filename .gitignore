@@ -4,7 +4,7 @@
 
 # Unity directories
 
-Re-boot/Library/
+#Re-boot/Library/
 #Re-boot/ProjectSettings/
 Re-boot/Temp/
 Re-boot/UnityPackageManager/
