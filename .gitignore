@@ -13,7 +13,7 @@ Re-boot/UnityPackageManager/
 
 .vs/
 .idea/
- 
+*.csproj 
 
 # Misc
 Re-boot/Assembly-CSharp.csproj
