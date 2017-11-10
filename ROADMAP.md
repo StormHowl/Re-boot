@@ -1,4 +1,4 @@
-# Roadmap
+a# Roadmap
 
 ## Version 0.0 - Prototype basique
 
@@ -51,7 +51,14 @@
 - Création d'éléments destructibles
 - Génération d'éléments destructibles sur le terrain
 
-## Version 0.3 - Système de craft
+## Version 0.3 - IA Basique
+
+- IA basique qui ne fait que se déplacer et tirer sur les ennemis.
+- Utilisation de la capacité rewind dans des cas stéréotypés (mort d'un allié, grosse perte de vie)
+- Créer un comportement de groupe lors du déplacement, et du choix de la cible
+- (?) Voir un système de maître-esclave avec des IAs qui se contentent de suivre les décisions, et une autre qui les prend.
+
+## Version 0.4 - Système de craft
 
 - Ajout de la possibilité de destruction suivant un certain mode, des éléments destructibles
 - Destruction d'éléments destructibles à partir de tirs
@@ -64,7 +71,13 @@
 - "Arme" utilisée pour la destruction d'éléménts de décors et d'éléments construits. Permet après utilisation de looter sur un élément détruit. Fait des dégats négligeables aux joueurs.
 - Armes réalisent des dégats sur les éléments destructibles, mais ne permettent pas de loot leurs composants.
 
-## Version 0.4 - Gameplay avancé
+## Version 0.5 - IA Avancée
+
+- Estimation des déplacements des joueurs
+- Destruction et construction de terrain
+
+
+## Version 0.5 - Gameplay avancé
 
 - Nouvelles armes pour les joueurs (bombes)
 - Ajout d'une physique des bâtiments
