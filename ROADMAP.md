@@ -1,4 +1,4 @@
-a# Roadmap
+# Roadmap
 
 ## Version 0.0 - Prototype basique
 
@@ -25,6 +25,20 @@ a# Roadmap
 - Mort définitive d'une équipe (et fin de la partie)
 - HUD Basique (barre de vie, viseur, cooldown, capacités)
 - Zone de respawn (invicibilité : insensibilité aux dégâts, différentiation de la zone par rapport au terrain)
+
+#### Formule pour le calcul du cooldown de l'utilisation de la capacité Rewind pour un joueur
+
+- `x = 5` : temps de rechargement global
+- `y = 3` : temps de rechargement pour l'équipe
+- `z = 5` : temps de rechargement pour le joueur
+- `t = 3` : temps remonté en arrière par la capacité
+- `n = [4-6]` : nombre de joueurs
+
+La formule est donc pour type de joueur :
+- Pour un joueur qui n'a pas utilisé la capacité mais dans la même équipe que celui qui l'a utilisée : `cd = x+y`
+- Pour un joueur qui n'a pas utilisé la capacité et est dans l'équipe adverse de celui qui l'a utilisée : `cd = x`
+- Pour un joueur qui a utilisé la capacité : `cd = x + y + z + 3*n`
+
 
 ## Version 0.1 - Personnages, tirs et physique
 
