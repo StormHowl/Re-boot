@@ -18,9 +18,7 @@ public struct TimePosition
 public class PlayerController : NetworkBehaviour
 {
     public const float RewindTime = 2.0f;
-
     public GameObject bulletPrefab;
-
     public Transform bulletSpawn;
 
     public List<TimePosition> positions;
@@ -33,6 +31,8 @@ public class PlayerController : NetworkBehaviour
     {
         positions = new List<TimePosition>();
         camera = GetComponentInChildren<Camera>();
+		
+		this.transform.position = new Vector3(0.0f,1.0f,0.0f);
 
         if (!isLocalPlayer)
         {
@@ -92,7 +92,7 @@ public class PlayerController : NetworkBehaviour
             bulletSpawn.rotation);
 
         // Add velocity to the bullet
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6;
+        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * bulletPrefab.GetComponent<Bullet>().speed;
 
         // Spawn the bullet on the Clients
         NetworkServer.Spawn(bullet);
