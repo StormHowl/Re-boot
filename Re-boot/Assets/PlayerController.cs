@@ -3,27 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public struct TimePosition
-{
-    public float deltaTime;
-    public Vector3 position;
 
-    public TimePosition(float deltaTime, Vector3 position)
-    {
-        this.deltaTime = deltaTime;
-        this.position = position;
-    }
-}
 
 public class PlayerController : NetworkBehaviour
 {
-    public const float RewindTime = 2.0f;
-
     public GameObject bulletPrefab;
 
     public Transform bulletSpawn;
 
-    public List<TimePosition> positions;
     public float totalRegisteredMovements = 0.0f;
 
     public Camera camera;
@@ -31,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        positions = new List<TimePosition>();
+        gameObject.tag = "Player";
         camera = GetComponentInChildren<Camera>();
 
         if (!isLocalPlayer)
@@ -44,12 +31,6 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
-        if (!isLocalPlayer)
-        {
-            RegisterPosition();
-            return;
-        }
-
         var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
         var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
 
@@ -63,20 +44,6 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            CmdRewind();
-        }
-    }
-
-    [Server]
-    void RegisterPosition()
-    {
-        positions.Add(new TimePosition(Time.deltaTime, transform.position));
-        if (totalRegisteredMovements + Time.deltaTime > 20.0f)
-        {
-            totalRegisteredMovements -= positions[0].deltaTime;
-            positions.RemoveAt(0);
-
-            totalRegisteredMovements += Time.deltaTime;
         }
     }
 
@@ -86,7 +53,7 @@ public class PlayerController : NetworkBehaviour
     void CmdFire()
     {
         // Create the Bullet from the Bullet Prefab
-        var bullet = (GameObject) Instantiate(
+        var bullet = Instantiate(
             bulletPrefab,
             bulletSpawn.position,
             bulletSpawn.rotation);
@@ -99,20 +66,6 @@ public class PlayerController : NetworkBehaviour
 
         // Destroy the bullet after 2 seconds
         Destroy(bullet, 2.0f);
-    }
-
-    [Command]
-    void CmdRewind()
-    {
-        float delta = 0.0f;
-        int i = positions.Count - 1;
-        for (; i > 0 && delta <= RewindTime; --i)
-        {
-            delta += positions[i].deltaTime;
-        }
-
-        transform.position = positions[i].position;
-        RpcRewind(transform.position);
     }
 
     [ClientRpc]
