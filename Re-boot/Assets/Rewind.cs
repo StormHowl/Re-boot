@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 public struct GameState
 {
@@ -37,6 +38,8 @@ public class Rewind : MonoBehaviour
 	}
 }
 =======
+=======
+>>>>>>> 3d25ac42eb1e9ca5b00da569821f3dcfd4f98c60
 using UnityEngine.Networking;
 
 public struct GameFlash
@@ -116,5 +119,9 @@ public class Rewind : NetworkBehaviour
     void RpcRewindTo(GameFlash flash)
     {
     }
+<<<<<<< HEAD
+}
+>>>>>>> 3d25ac42eb1e9ca5b00da569821f3dcfd4f98c60
+=======
 }
 >>>>>>> 3d25ac42eb1e9ca5b00da569821f3dcfd4f98c60
