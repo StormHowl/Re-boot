@@ -1,29 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Networking;
 
 
-
-public class PlayerController : NetworkBehaviour
+public class PlayerController : NetworkBehaviour, IRewindable
 {
-    public GameObject bulletPrefab;
+    public GameObject BulletPrefab;
+    public Transform BulletSpawn;
+    public Camera viewCamera;
 
-    public Transform bulletSpawn;
-
-    public float totalRegisteredMovements = 0.0f;
-
-    public Camera camera;
+    private RewindableGameObject _rewindableGameObject;
 
     // Use this for initialization
     void Start()
     {
         gameObject.tag = "Player";
-        camera = GetComponentInChildren<Camera>();
+        viewCamera = GetComponentInChildren<Camera>();
 
         if (!isLocalPlayer)
         {
-            camera.enabled = false;
+            viewCamera.enabled = false;
+        }
+
+        if (isServer)
+        {
+            global::Rewind.AddRewindable(this);
+            _rewindableGameObject = new RewindableGameObject();
         }
     }
 
@@ -44,6 +48,12 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
+            CmdRewind();
+        }
+
+        if (isServer)
+        {
+            _rewindableGameObject.SaveTemporalFlash(transform.position, Time.deltaTime);
         }
     }
 
@@ -54,9 +64,9 @@ public class PlayerController : NetworkBehaviour
     {
         // Create the Bullet from the Bullet Prefab
         var bullet = Instantiate(
-            bulletPrefab,
-            bulletSpawn.position,
-            bulletSpawn.rotation);
+            BulletPrefab,
+            BulletSpawn.position,
+            BulletSpawn.rotation);
 
         // Add velocity to the bullet
         bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6;
@@ -68,13 +78,22 @@ public class PlayerController : NetworkBehaviour
         Destroy(bullet, 2.0f);
     }
 
-    [ClientRpc]
-    void RpcRewind(Vector3 position)
+    [Command]
+    void CmdRewind()
     {
-        if (isLocalPlayer)
-        {
-            transform.position = position;
-        }
+        global::Rewind.RewindEveryone();
+    }
+
+    [Server]
+    public void Rewind()
+    {
+        RpcRewind(_rewindableGameObject.FindObjectFlashPosition());
+    }
+
+    [ClientRpc]
+    public void RpcRewind(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public override void OnStartLocalPlayer()
