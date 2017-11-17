@@ -8,6 +8,7 @@
 #Re-boot/ProjectSettings/
 Re-boot/Temp/
 Re-boot/UnityPackageManager/
+Re-boot/obj/
 
 # Projects files
 
@@ -16,4 +17,5 @@ Re-boot/UnityPackageManager/
 #*.csproj 
 
 # Misc
-#Re-boot/Assembly-CSharp.csproj
+
+Re-boot/Assembly-CSharp.csproj

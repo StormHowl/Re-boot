@@ -26,10 +26,18 @@ public class PlayerController : NetworkBehaviour
     public List<TimePosition> positions;
     public float totalRegisteredMovements = 0.0f;
 
+    public Camera camera;
+
     // Use this for initialization
     void Start()
     {
         positions = new List<TimePosition>();
+        camera = GetComponentInChildren<Camera>();
+
+        if (!isLocalPlayer)
+        {
+            camera.enabled = false;
+        }
     }
 
     // Update is called once per frame
