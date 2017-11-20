@@ -9,14 +9,13 @@ public class PlayerController : NetworkBehaviour, IRewindable
 {
     public GameObject BulletPrefab;
     public Transform BulletSpawn;
-    public Camera viewCamera;
+    private Camera viewCamera;
 
     private RewindableGameObject _rewindableGameObject;
 
     // Use this for initialization
     void Start()
     {
-        gameObject.tag = "Player";
         viewCamera = GetComponentInChildren<Camera>();
 
         if (!isLocalPlayer)
@@ -24,11 +23,12 @@ public class PlayerController : NetworkBehaviour, IRewindable
             viewCamera.enabled = false;
         }
 
+        /*
         if (isServer)
         {
             global::Rewind.AddRewindable(this);
             _rewindableGameObject = new RewindableGameObject();
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -51,10 +51,11 @@ public class PlayerController : NetworkBehaviour, IRewindable
             CmdRewind();
         }
 
+        /*
         if (isServer)
         {
             _rewindableGameObject.SaveTemporalFlash(transform.position, Time.deltaTime);
-        }
+        }*/
     }
 
     // This [Command] code is called on the Client …
