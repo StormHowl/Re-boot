@@ -594,8 +594,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1184567437219690, guid: 242c843d241e944e3a8582fc397b7004,
     type: 2}
   bulletSpawn: {fileID: 4074340335530976}
-  totalRegisteredMovements: 0
-  camera: {fileID: 0}
 --- !u!114 &114219256944276406
 MonoBehaviour:
   m_ObjectHideFlags: 1
