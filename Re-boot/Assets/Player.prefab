@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 114198414328587818}
   - component: {fileID: 114786714400801280}
   - component: {fileID: 114124962735776064}
+  - component: {fileID: 143223582324641728}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -594,8 +595,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1184567437219690, guid: 242c843d241e944e3a8582fc397b7004,
     type: 2}
   bulletSpawn: {fileID: 4074340335530976}
-  totalRegisteredMovements: 0
-  camera: {fileID: 0}
+  Camera: {fileID: 20981583708338154}
 --- !u!114 &114219256944276406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -783,6 +783,23 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &143223582324641728
+CharacterController:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1545882599005042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!222 &222495994354574440
 CanvasRenderer:
