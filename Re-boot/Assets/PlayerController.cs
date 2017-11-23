@@ -6,21 +6,31 @@ using UnityEngine.Networking;
 
 public class PlayerController : RewindableEntity, IRewindEntity
 {
+    private static float _sensitivity = 2.0f;
+    private static float _speed = 5.0f;
+
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
 
 
-    private Camera _camera;
+    private CharacterController player;
+    public Camera Camera;
+
+    private float _moveLr;
+    private float _moveFb;
+    private float _rotX;
+    private float _rotY;
+
+
 
     // Use this for initialization
     void Start()
     {
-        _camera = GetComponentInChildren<Camera>();
-
-        this.transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        player = GetComponent<CharacterController>();
 
         if (!isLocalPlayer)
-            _camera.enabled = false;
+            Camera.enabled = false;
         if (isServer)
         {
             Init();
@@ -39,13 +49,20 @@ public class PlayerController : RewindableEntity, IRewindEntity
             return;
 
 
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
+        _moveLr = Input.GetAxis("Horizontal") * _speed;
+        _moveFb = Input.GetAxis("Vertical") * _speed;
+        _rotX = Input.GetAxis("Mouse X") * _sensitivity;
+        _rotY = Input.GetAxis("Mouse Y") * _sensitivity;
 
-        transform.Rotate(0, x, 0);
-        transform.Translate(0, 0, z);
+        Vector3 movement = new Vector3(_moveLr, 0, _moveFb);
+        transform.Rotate(0, _rotX, 0);
+        Camera.transform.Rotate(-_rotY, 0, 0);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        movement = transform.rotation * movement;
+        player.Move(movement * Time.deltaTime);
+
+
+        if ((int) Input.GetAxis("Fire1") == 1 || Input.GetKeyDown(KeyCode.Space))
         {
             CmdFire();
         }
