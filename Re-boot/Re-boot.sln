@@ -1,9 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{6584C817-AF9D-EC23-E531-006780E1A041}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Re-boot", "Assembly-CSharp.csproj", "{6584C817-AF9D-EC23-E531-006780E1A041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{8F031C2C-A9EE-D62A-707C-9D3F6D0A79F1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Re-boot", "Assembly-CSharp-Editor-firstpass.csproj", "{8F031C2C-A9EE-D62A-707C-9D3F6D0A79F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

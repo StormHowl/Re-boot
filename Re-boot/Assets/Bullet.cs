@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
+	public float speed;
+	public int damage;
+
 	private void OnCollisionEnter(Collision other)
 	{
 		var hit = other.gameObject;
