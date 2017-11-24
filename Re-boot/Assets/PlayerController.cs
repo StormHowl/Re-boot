@@ -31,7 +31,10 @@ public class PlayerController : RewindableEntity, IRewindEntity
         player = GetComponent<CharacterController>();
 
         if (!isLocalPlayer)
+        {
             Camera.enabled = false;
+            Camera.GetComponent<AudioListener>().enabled = false;
+        }
         if (isServer)
         {
             Init();
