@@ -15,13 +15,14 @@ public class PlayerController : RewindableEntity, IRewindEntity
 
     private CharacterController player;
     public Camera Camera;
+    public GameObject gun;
 
     private float _moveLr;
     private float _moveFb;
     private float _rotX;
     private float _rotY;
 
-
+    private MouseHandler _mouseHandler;
 
     // Use this for initialization
     void Start()
@@ -35,6 +36,12 @@ public class PlayerController : RewindableEntity, IRewindEntity
         {
             Init();
             GameManager.Instance.AddEntity(this);
+        }
+
+        if (isLocalPlayer)
+        {
+            _mouseHandler = new MouseHandler();
+            _mouseHandler.Init(transform, Camera.transform);
         }
     }
 
@@ -55,8 +62,10 @@ public class PlayerController : RewindableEntity, IRewindEntity
         _rotY = Input.GetAxis("Mouse Y") * _sensitivity;
 
         Vector3 movement = new Vector3(_moveLr, 0, _moveFb);
-        transform.Rotate(0, _rotX, 0);
-        Camera.transform.Rotate(-_rotY, 0, 0);
+        //transform.Rotate(0, _rotX, 0);
+        /*Camera.transform.Rotate(-_rotY, 0, 0);
+        gun.transform.Rotate(-_rotY, 0, 0);*/
+        _mouseHandler.LookRotation(transform, Camera.transform);
 
         movement = transform.rotation * movement;
         player.Move(movement * Time.deltaTime);
