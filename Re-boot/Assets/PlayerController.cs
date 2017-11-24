@@ -12,16 +12,15 @@ public class PlayerController : RewindableEntity, IRewindEntity
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
 
-
     private CharacterController player;
-    public Camera Camera;
+	public Camera Camera;
+
+	public int teamNumber;
 
     private float _moveLr;
     private float _moveFb;
     private float _rotX;
     private float _rotY;
-
-
 
     // Use this for initialization
     void Start()
@@ -29,14 +28,26 @@ public class PlayerController : RewindableEntity, IRewindEntity
         transform.position = new Vector3(0.0f, 1.0f, 0.0f);
         player = GetComponent<CharacterController>();
 
-        if (!isLocalPlayer)
-            Camera.enabled = false;
-        if (isServer)
-        {
-            Init();
-            GameManager.Instance.AddEntity(this);
-        }
+		if (isServer) {
+			Init ();
+			GameManager.Instance.AddEntity (this);
+			teamNumber = TeamManager.Instance.AddPlayer (this);
+		} else {
+			CmdInitializeTeam ();
+		}
+		if (!isLocalPlayer) {
+			Camera.enabled = false;
+			if (teamNumber == 0)
+				GetComponent<MeshRenderer>().material.color = Color.green;
+			else
+				GetComponent<MeshRenderer>().material.color = Color.red;			
+		}
     }
+
+	[Command]
+	void CmdInitializeTeam() {
+		teamNumber = TeamManager.Instance.FindTeam (this);
+	}
 
     // Update is called once per frame
 
