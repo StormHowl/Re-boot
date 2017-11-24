@@ -8,15 +8,22 @@ public class TeamManager : NetworkBehaviour {
 
 	public static TeamManager Instance = null;
 
-	private static List<IRewindEntity> _teamHuman;
-	private static List<IRewindEntity> _teamRobot;
+	//private static List<IRewindEntity> _teamHuman;
+	//private static List<IRewindEntity> _teamRobot;
+
+	private static Dictionary<IRewindEntity, int> _teams;
+	int _nbHuman;
+	int _nbRobot;
 
 	// Use this for initialization
 
 	void Start() {
-		_teamHuman = new List<IRewindEntity>();	
+		/*_teamHuman = new List<IRewindEntity>();	
 		_teamRobot = new List<IRewindEntity>();	
-		Debug.Log("Initialise : " + _teamHuman.Count + " and " + _teamRobot.Count );	
+		Debug.Log("Initialise : " + _teamHuman.Count + " and " + _teamRobot.Count );*/
+		_teams = new Dictionary<IRewindEntity, int> ();
+		_nbHuman = 0;
+		_nbRobot = 0;
 	}
 
 	void Awake () {
@@ -39,31 +46,27 @@ public class TeamManager : NetworkBehaviour {
 	//return the choosen team of the given player (return -1 if is not in a team)
 	[Server]
 	public int FindTeam(IRewindEntity player) {
-		if ( _teamHuman.Contains(player))
-			return 0;
-		else if (_teamRobot.Contains(player))
-			return 1;
+		int type;
+		_teams.TryGetValue (player, out type);
 
-		return -1;
+		return type;
 	}
 
 	[Server]
 	public int AddPlayer(IRewindEntity player) {
 		//TODO : check if there is too much player ? Or do it in server when try to connect ?
-		if (_teamHuman.Count < _teamRobot.Count) {
-			_teamHuman.Add(player);
-			Debug.Log("Adding a new player in Human");
+		if (_nbHuman < _nbRobot) {
+			_teams.Add(player, 0);
 			return 0;
-		} else if (_teamHuman.Count > _teamRobot.Count) {
-			_teamRobot.Add (player);
+		} else if (_nbHuman > _nbRobot) {
+			_teams.Add(player, 1);
 			return 1;
 		} else {
 			if (Random.value > 0.5) { //Random.value return a number between 0.0 and 1.0
-				_teamRobot.Add (player);
+				_teams.Add(player,1);
 				return 1;
-			} 
-
-			_teamHuman.Add (player);
+			}
+			_teams.Add(player,0);
 			return 0;
 		}
 	}
