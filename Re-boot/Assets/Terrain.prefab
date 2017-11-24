@@ -58,7 +58,7 @@ MonoBehaviour:
   depth: 256
   scale: 0.1
   frequency: 0.1
-  tree: {fileID: 0}
+  tree: {fileID: 138356, guid: fe204993f83ea534c99e733c6ff995a8, type: 2}
   rock: {fileID: 0}
   offSetX: 10.213
   offSetY: 10.123

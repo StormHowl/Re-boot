@@ -39,7 +39,7 @@ public class Health : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            transform.position = Vector3.zero;
+            transform.position = new Vector3(0.0f, 1.0f, 0.0f);
         }
     }
 }

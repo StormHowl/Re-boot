@@ -1,21 +1,41 @@
-# Unity temp files
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Build/
+Obj/
+obj/
+UnityGenerated/
+Library/
+Assets/AssetStoreTools*
+*.meta
 
-#*.meta
-
-# Unity directories
-
-#Re-boot/Library/
-#Re-boot/ProjectSettings/
-Re-boot/Temp/
-Re-boot/UnityPackageManager/
-Re-boot/obj/
-
-# Projects files
-
-.vs/
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*/*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
 .idea/
-#*.csproj 
+.vscode/
+.vs/
 
-# Misc
-
-Re-boot/Assembly-CSharp.csproj
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db

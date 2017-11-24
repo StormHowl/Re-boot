@@ -1,42 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public struct TimePosition
+public class PlayerController : RewindableEntity, IRewindEntity
 {
-    public float deltaTime;
-    public Vector3 position;
-
-    public TimePosition(float deltaTime, Vector3 position)
-    {
-        this.deltaTime = deltaTime;
-        this.position = position;
-    }
-}
-
-public class PlayerController : NetworkBehaviour
-{
-    public const float RewindTime = 2.0f;
+    private static float _sensitivity = 2.0f;
+    private static float _speed = 5.0f;
 
     public GameObject bulletPrefab;
-
     public Transform bulletSpawn;
 
-    public List<TimePosition> positions;
-    public float totalRegisteredMovements = 0.0f;
 
-    public Camera camera;
+    private CharacterController player;
+    public Camera Camera;
+
+    private float _moveLr;
+    private float _moveFb;
+    private float _rotX;
+    private float _rotY;
+
+
 
     // Use this for initialization
     void Start()
     {
-        positions = new List<TimePosition>();
-        camera = GetComponentInChildren<Camera>();
+        transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        player = GetComponent<CharacterController>();
 
         if (!isLocalPlayer)
+            Camera.enabled = false;
+        if (isServer)
         {
-            camera.enabled = false;
+            Init();
+            GameManager.Instance.AddEntity(this);
         }
     }
 
@@ -44,19 +42,27 @@ public class PlayerController : NetworkBehaviour
 
     void Update()
     {
+        if(isServer)
+            SaveTemporalFlash(transform.position, Time.deltaTime);
+
         if (!isLocalPlayer)
-        {
-            RegisterPosition();
             return;
-        }
 
-        var x = Input.GetAxis("Horizontal") * Time.deltaTime * 150.0f;
-        var z = Input.GetAxis("Vertical") * Time.deltaTime * 3.0f;
 
-        transform.Rotate(0, x, 0);
-        transform.Translate(0, 0, z);
+        _moveLr = Input.GetAxis("Horizontal") * _speed;
+        _moveFb = Input.GetAxis("Vertical") * _speed;
+        _rotX = Input.GetAxis("Mouse X") * _sensitivity;
+        _rotY = Input.GetAxis("Mouse Y") * _sensitivity;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        Vector3 movement = new Vector3(_moveLr, 0, _moveFb);
+        transform.Rotate(0, _rotX, 0);
+        Camera.transform.Rotate(-_rotY, 0, 0);
+
+        movement = transform.rotation * movement;
+        player.Move(movement * Time.deltaTime);
+
+
+        if ((int) Input.GetAxis("Fire1") == 1 || Input.GetKeyDown(KeyCode.Space))
         {
             CmdFire();
         }
@@ -67,18 +73,6 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [Server]
-    void RegisterPosition()
-    {
-        positions.Add(new TimePosition(Time.deltaTime, transform.position));
-        if (totalRegisteredMovements + Time.deltaTime > 20.0f)
-        {
-            totalRegisteredMovements -= positions[0].deltaTime;
-            positions.RemoveAt(0);
-
-            totalRegisteredMovements += Time.deltaTime;
-        }
-    }
 
     // This [Command] code is called on the Client …
     // … but it is run on the Server!
@@ -86,13 +80,14 @@ public class PlayerController : NetworkBehaviour
     void CmdFire()
     {
         // Create the Bullet from the Bullet Prefab
-        var bullet = (GameObject) Instantiate(
+        var bullet = Instantiate(
             bulletPrefab,
             bulletSpawn.position,
             bulletSpawn.rotation);
 
         // Add velocity to the bullet
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6;
+        bullet.GetComponent<Rigidbody>().velocity =
+            bullet.transform.forward * bulletPrefab.GetComponent<Bullet>().speed;
 
         // Spawn the bullet on the Clients
         NetworkServer.Spawn(bullet);
@@ -104,28 +99,23 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdRewind()
     {
-        float delta = 0.0f;
-        int i = positions.Count - 1;
-        for (; i > 0 && delta <= RewindTime; --i)
-        {
-            delta += positions[i].deltaTime;
-        }
-
-        transform.position = positions[i].position;
-        RpcRewind(transform.position);
-    }
-
-    [ClientRpc]
-    void RpcRewind(Vector3 position)
-    {
-        if (isLocalPlayer)
-        {
-            transform.position = position;
-        }
+        GameManager.Instance.Rewind();
     }
 
     public override void OnStartLocalPlayer()
     {
         GetComponent<MeshRenderer>().material.color = Color.blue;
+    }
+
+    [Server]
+    public void Rewind()
+    {
+        RpcRewind(FindObjectFlashPosition());
+    }
+
+    [ClientRpc]
+    public void RpcRewind(Vector3 position)
+    {
+        transform.position = position;
     }
 }
