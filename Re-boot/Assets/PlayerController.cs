@@ -12,17 +12,18 @@ public class PlayerController : RewindableEntity, IRewindEntity
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
 
-
     private CharacterController player;
     public Camera Camera;
-    public GameObject gun;
+    public GameObject Gun;
 
     private float _moveLr;
     private float _moveFb;
-    private float _rotX;
-    private float _rotY;
 
     private MouseHandler _mouseHandler;
+
+    public int teamNumber;
+	public Vector3 spawnHuman = new Vector3(0.0f, 1.0f, 0.0f);
+	public Vector3 spawnRobot = new Vector3(10.0f, 1.0f, 0.0f);
 
     // Use this for initialization
     void Start()
@@ -39,14 +40,28 @@ public class PlayerController : RewindableEntity, IRewindEntity
         {
             Init();
             GameManager.Instance.AddEntity(this);
+            teamNumber = TeamManager.Instance.AddPlayer(this);
+            RpcInitializeTeam(teamNumber);
         }
 
         if (isLocalPlayer)
         {
             _mouseHandler = new MouseHandler();
-            _mouseHandler.Init(transform, Camera.transform, gun.transform);
+            _mouseHandler.Init(transform, Camera.transform, Gun.transform);
         }
     }
+
+	[ClientRpc]
+	void RpcInitializeTeam(int team) {
+		teamNumber = team;
+		if (teamNumber == 0) {
+			GetComponent<MeshRenderer> ().material.color = Color.green;
+			transform.position = spawnHuman;
+		} else {
+			GetComponent<MeshRenderer> ().material.color = Color.red;
+			transform.position = spawnRobot;
+		}
+	}
 
     // Update is called once per frame
 
@@ -58,18 +73,14 @@ public class PlayerController : RewindableEntity, IRewindEntity
         if (!isLocalPlayer)
             return;
 
-
-        _moveLr = Input.GetAxis("Horizontal") * _speed;
+		_moveLr = Input.GetAxis("Horizontal") * _speed;
         _moveFb = Input.GetAxis("Vertical") * _speed;
-        _rotX = Input.GetAxis("Mouse X") * _sensitivity;
-        _rotY = Input.GetAxis("Mouse Y") * _sensitivity;
 
         Vector3 movement = new Vector3(_moveLr, 0, _moveFb);
-        _mouseHandler.LookRotation(transform, Camera.transform, gun.transform);
+        _mouseHandler.LookRotation(transform, Camera.transform, Gun.transform);
 
         movement = transform.rotation * movement;
         player.Move(movement * Time.deltaTime);
-
 
         if ((int) Input.GetAxis("Fire1") == 1 || Input.GetKeyDown(KeyCode.Space))
         {
@@ -113,7 +124,7 @@ public class PlayerController : RewindableEntity, IRewindEntity
 
     public override void OnStartLocalPlayer()
     {
-        GetComponent<MeshRenderer>().material.color = Color.blue;
+		
     }
 
     [Server]

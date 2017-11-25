@@ -25,8 +25,7 @@ public class Health : NetworkBehaviour
 		{
 		    currentHealth = maxHealth;
 			RpcRespawn();
-		}
-		
+		}		
 	}
 
 	void OnChangeHealth(int currentHealth)
@@ -39,7 +38,7 @@ public class Health : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+			transform.position = new Vector3(0.0f, 1.0f, 0.0f);
         }
     }
 }
