@@ -57,16 +57,20 @@ public class TeamManager : NetworkBehaviour {
 		//TODO : check if there is too much player ? Or do it in server when try to connect ?
 		if (_nbHuman < _nbRobot) {
 			_teams.Add(player, 0);
+			_nbHuman++;
 			return 0;
 		} else if (_nbHuman > _nbRobot) {
 			_teams.Add(player, 1);
+			_nbRobot++;
 			return 1;
 		} else {
 			if (Random.value > 0.5) { //Random.value return a number between 0.0 and 1.0
 				_teams.Add(player,1);
+				_nbRobot++;
 				return 1;
 			}
 			_teams.Add(player,0);
+			_nbHuman++;
 			return 0;
 		}
 	}

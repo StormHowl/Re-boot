@@ -76,7 +76,6 @@ public class PlayerController : RewindableEntity, IRewindEntity
         movement = transform.rotation * movement;
         player.Move(movement * Time.deltaTime);
 
-
         if ((int) Input.GetAxis("Fire1") == 1 || Input.GetKeyDown(KeyCode.Space))
         {
             CmdFire();
