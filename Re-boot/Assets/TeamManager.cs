@@ -37,11 +37,6 @@ public class TeamManager : NetworkBehaviour {
 			Destroy(gameObject);
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	//return the choosen team of the given player (return -1 if is not in a team)
 	[Server]

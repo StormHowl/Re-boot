@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 
 public class PlayerController : RewindableEntity, IRewindEntity
 {
-    private static float _sensitivity = 2.0f;
-    private static float _speed = 5.0f;
+    public static float Speed = 5.0f;
+    public static float ShootingCadency = 0.5f;
 
     public GameObject bulletPrefab;
     public Transform bulletSpawn;
@@ -19,16 +19,19 @@ public class PlayerController : RewindableEntity, IRewindEntity
     private float _moveLr;
     private float _moveFb;
 
+    private bool _shooting;
+    private float _shootingCounter;
+
     private MouseHandler _mouseHandler;
 
     public int teamNumber;
-	public Vector3 spawnHuman = new Vector3(0.0f, 1.0f, 0.0f);
-	public Vector3 spawnRobot = new Vector3(10.0f, 1.0f, 0.0f);
+    public Vector3 spawnHuman = new Vector3(0.0f, 1.0f, 0.0f);
+    public Vector3 spawnRobot = new Vector3(10.0f, 1.0f, 0.0f);
 
     // Use this for initialization
     void Start()
     {
-        transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+        transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         player = GetComponent<CharacterController>();
 
         if (!isLocalPlayer)
@@ -36,45 +39,32 @@ public class PlayerController : RewindableEntity, IRewindEntity
             Camera.enabled = false;
             Camera.GetComponent<AudioListener>().enabled = false;
         }
-        if (isServer)
-        {
-            Init();
-            GameManager.Instance.AddEntity(this);
-            teamNumber = TeamManager.Instance.AddPlayer(this);
-            RpcInitializeTeam(teamNumber);
-        }
-
-        if (isLocalPlayer)
+        else if (isLocalPlayer)
         {
             _mouseHandler = new MouseHandler();
             _mouseHandler.Init(transform, Camera.transform, Gun.transform);
         }
-    }
 
-	[ClientRpc]
-	void RpcInitializeTeam(int team) {
-		teamNumber = team;
-		if (teamNumber == 0) {
-			GetComponent<MeshRenderer> ().material.color = Color.green;
-			transform.position = spawnHuman;
-		} else {
-			GetComponent<MeshRenderer> ().material.color = Color.red;
-			transform.position = spawnRobot;
-		}
-	}
+        if (!isServer) return;
+
+        Init();
+        GameManager.Instance.AddEntity(this);
+        teamNumber = TeamManager.Instance.AddPlayer(this);
+        RpcInitializeTeam(teamNumber);
+    }
 
     // Update is called once per frame
 
     void Update()
     {
-        if(isServer)
+        if (isServer)
             SaveTemporalFlash(transform.position, Time.deltaTime);
 
         if (!isLocalPlayer)
             return;
 
-		_moveLr = Input.GetAxis("Horizontal") * _speed;
-        _moveFb = Input.GetAxis("Vertical") * _speed;
+        _moveLr = Input.GetAxis("Horizontal") * Speed;
+        _moveFb = Input.GetAxis("Vertical") * Speed;
 
         Vector3 movement = new Vector3(_moveLr, 0, _moveFb);
         _mouseHandler.LookRotation(transform, Camera.transform, Gun.transform);
@@ -82,15 +72,52 @@ public class PlayerController : RewindableEntity, IRewindEntity
         movement = transform.rotation * movement;
         player.Move(movement * Time.deltaTime);
 
-        if ((int) Input.GetAxis("Fire1") == 1 || Input.GetKeyDown(KeyCode.Space))
-        {
-            CmdFire();
-        }
+        HandleFire();
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             CmdRewind();
         }
+    }
+
+    [ClientRpc]
+    void RpcInitializeTeam(int team)
+    {
+        teamNumber = team;
+        if (teamNumber == 0)
+        {
+            GetComponent<MeshRenderer>().material.color = Color.green;
+            transform.position = spawnHuman;
+        }
+        else
+        {
+            GetComponent<MeshRenderer>().material.color = Color.red;
+            transform.position = spawnRobot;
+        }
+    }
+
+    #region Fire
+    [Client]
+    void HandleFire()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            _shooting = true;
+            _shootingCounter = ShootingCadency;
+        }
+
+        if (Input.GetButtonUp("Fire1"))
+        {
+            _shooting = false;
+        }
+
+        if (_shooting)
+            _shootingCounter += Time.deltaTime;
+
+        if (!(_shootingCounter >= ShootingCadency)) return;
+
+        _shootingCounter = 0f;
+        CmdFire();
     }
 
 
@@ -115,16 +142,14 @@ public class PlayerController : RewindableEntity, IRewindEntity
         // Destroy the bullet after 2 seconds
         Destroy(bullet, 2.0f);
     }
+    #endregion
+
+    #region Rewind
 
     [Command]
     void CmdRewind()
     {
         GameManager.Instance.Rewind();
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-		
     }
 
     [Server]
@@ -138,4 +163,6 @@ public class PlayerController : RewindableEntity, IRewindEntity
     {
         transform.position = position;
     }
+
+    #endregion
 }

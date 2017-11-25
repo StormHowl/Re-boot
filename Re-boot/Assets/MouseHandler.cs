@@ -39,6 +39,7 @@ namespace DefaultNamespace
             _characterTargetRot *= Quaternion.Euler(0f, _xRot, 0f);
             _cameraTargetRot *= Quaternion.Euler(-_yRot, 0f, 0f);
             _gunTargetRot *= Quaternion.Euler(-_yRot, 0f, 0f);
+            Debug.Log(_yRot);
 
             if (clampVerticalRotation)
             {
