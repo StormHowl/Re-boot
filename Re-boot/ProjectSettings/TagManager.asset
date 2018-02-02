@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - ViewCamera
+  - HeadCollider
+  - BodyCollider
+  - Wall
+  - Brick
+  - Tree
+  - AI
   layers:
   - Default
   - TransparentFX
@@ -14,12 +20,12 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LocalPlayer
+  - RemotePlayer
+  - DontDraw
+  - HeadCollider
+  - BodyCollider
+  - AI
   - 
   - 
   - 

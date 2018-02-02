@@ -8,6 +8,7 @@ UnityGenerated/
 Library/
 Assets/AssetStoreTools*
 *.meta
+.collabignore
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -16,6 +17,7 @@ ExportedObj/
 *.svd
 *.userprefs
 *.csproj
+*.csproj.DotSettings
 */*.csproj
 *.pidb
 *.suo

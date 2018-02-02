@@ -8,6 +8,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ServerScene.unity
     guid: 7a2f70751c5124ef4b780f3eb63b6cfd
-  - enabled: 1
+  - enabled: 0
     path: Assets/Base.unity
     guid: c37f972887b279a448430b6a7ba6b704
+  - enabled: 0
+    path: Assets/Base.unity
+    guid: c37f972887b279a448430b6a7ba6b704
+  - enabled: 1
+    path: Assets/EndParty.unity
+    guid: 6045f32392096df41bfbe042d31055df
+  - enabled: 0
+    path: Assets/TestsScene.unity
+    guid: 6382452ca3c46594282ebb01c199ac2b
+  - enabled: 1
+    path: Assets/GameScene.unity
+    guid: 3a44b5e297662c54d84d7432ec7770e6
+  - enabled: 0
+    path: Assets/WallTest.unity
+    guid: be35a9b6d1ef7744abf26b0bf0a0bb23
